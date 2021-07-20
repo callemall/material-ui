@@ -22,6 +22,7 @@ export interface CSSOthersObject {
 export type CSSPseudosForCSSObject = { [K in CSS.Pseudos]?: CSSObject };
 
 export interface ArrayCSSInterpolation extends Array<CSSInterpolation> {}
+export interface ArrayRootCSSInterpolation extends Array<RootCSSInterpolation> {}
 
 export interface CSSOthersObjectForCSSObject {
   [propertiesName: string]: CSSInterpolation;
@@ -42,18 +43,21 @@ export type Keyframes = {
 
 export type Equal<A, B, T, F> = A extends B ? (B extends A ? T : F) : F;
 
-export type InterpolationPrimitive =
+export type InterpolationPrimitive = RootInterpolationPrimitive | boolean | number | string;
+
+// If you have 10 or more items in union it slows down type check.
+// This type omits primitives which are not valid on the root of styles object.
+// https://github.com/mui-org/material-ui/issues/19113#issuecomment-879431287
+export type RootInterpolationPrimitive =
   | null
   | undefined
-  | boolean
-  | number
-  | string
   | ComponentSelector
   | Keyframes
   | SerializedStyles
   | CSSObject;
 
 export type CSSInterpolation = InterpolationPrimitive | ArrayCSSInterpolation;
+export type RootCSSInterpolation = RootInterpolationPrimitive | ArrayRootCSSInterpolation;
 
 export interface FunctionInterpolation<Props> {
   (props: Props): Interpolation<Props>;
@@ -63,13 +67,13 @@ export interface FunctionInterpolation<Props> {
  * By removing parameterized type references, this type brings better type check performance.
  */
 interface StaticFunctionInterpolation {
-  (props: { theme: DefaultTheme }): CSSInterpolation;
+  (props: { theme: DefaultTheme }): RootCSSInterpolation;
 }
 
 export interface ArrayInterpolation<Props> extends Array<Interpolation<Props>> {}
 
 export type Interpolation<Props> =
-  | InterpolationPrimitive
+  | RootInterpolationPrimitive
   | ArrayInterpolation<Props>
   | FunctionInterpolation<Props>;
 
@@ -126,7 +130,7 @@ export interface CreateStyledComponent<
   SpecificComponentProps extends {} = {},
   JSXProps extends {} = {},
 > {
-  (...styles: Array<InterpolationPrimitive | StaticFunctionInterpolation>): StyledComponent<
+  (...styles: Array<RootInterpolationPrimitive | StaticFunctionInterpolation>): StyledComponent<
     ComponentProps,
     SpecificComponentProps,
     JSXProps
