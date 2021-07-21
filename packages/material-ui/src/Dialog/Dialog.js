@@ -170,7 +170,6 @@ const Dialog = React.forwardRef(function Dialog(inProps, ref) {
     BackdropProps,
     children,
     className,
-    disableEscapeKeyDown = false,
     fullScreen = false,
     fullWidth = false,
     maxWidth = 'sm',
@@ -188,7 +187,6 @@ const Dialog = React.forwardRef(function Dialog(inProps, ref) {
 
   const styleProps = {
     ...props,
-    disableEscapeKeyDown,
     fullScreen,
     fullWidth,
     maxWidth,
@@ -235,7 +233,6 @@ const Dialog = React.forwardRef(function Dialog(inProps, ref) {
       }}
       closeAfterTransition
       BackdropComponent={DialogBackdrop}
-      disableEscapeKeyDown={disableEscapeKeyDown}
       onClose={onClose}
       open={open}
       ref={ref}
@@ -317,11 +314,6 @@ Dialog.propTypes /* remove-proptypes */ = {
    * @ignore
    */
   className: PropTypes.string,
-  /**
-   * If `true`, hitting escape will not fire the `onClose` callback.
-   * @default false
-   */
-  disableEscapeKeyDown: PropTypes.bool,
   /**
    * If `true`, the dialog is full-screen.
    * @default false
