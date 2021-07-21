@@ -11,7 +11,6 @@ import { create } from 'jss';
 import jssRtl from 'jss-rtl';
 import { useRouter } from 'next/router';
 import { StylesProvider, jssPreset } from '@material-ui/styles';
-import { StyledEngineProvider } from '@material-ui/core/styles';
 import pages from 'docs/src/pages';
 import initRedux from 'docs/src/modules/redux/initRedux';
 import PageContext from 'docs/src/modules/components/PageContext';
@@ -330,14 +329,11 @@ function AppWrapper(props) {
       </NextHead>
       <ReduxProvider store={redux}>
         <PageContext.Provider value={{ activePage, pages }}>
-          {/* TODO v5: remove once migration to emotion is completed */}
-          <StyledEngineProvider injectFirst>
-            <StylesProvider jss={jss}>
-              <ThemeProvider>
-                <DocsStyledEngineProvider>{children}</DocsStyledEngineProvider>
-              </ThemeProvider>
-            </StylesProvider>
-          </StyledEngineProvider>
+          <StylesProvider jss={jss}>
+            <ThemeProvider>
+              <DocsStyledEngineProvider>{children}</DocsStyledEngineProvider>
+            </ThemeProvider>
+          </StylesProvider>
         </PageContext.Provider>
         <LanguageNegotiation />
         <Analytics />
